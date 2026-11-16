@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/tuxxin/mcp/main/schemas/manifest.schema.json",
+  "title": "Tuxxin MCP server manifest",
+  "type": "object",
+  "required": ["version", "updated_at", "provider", "servers"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "updated_at": { "type": "string", "format": "date" },
+    "provider": {
+      "type": "object",
+      "required": ["name", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "repository": { "type": "string", "format": "uri", "pattern": "^https://" }
+      }
+    },
+    "servers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/server" }
+    }
+  },
+  "$defs": {
+    "server": {
+      "type": "object",
+      "required": ["id", "name", "domain", "description", "category", "status", "transport", "auth",
+                   "rate_limits", "client_key", "config_path", "docs_path", "tools"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "domain": { "type": "string", "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
+        "description": { "type": "string", "minLength": 10 },
+        "category": {
+          "type": "string",
+          "enum": ["certificate-transparency", "developer-tools", "screenshots", "web-scraping",
+                   "ip-intelligence", "security"]
+        },
+        "status": { "type": "string", "enum": ["live", "beta", "deprecated"] },
+        "transport": {
+          "type": "object",
+          "required": ["type", "url", "protocol_version"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "type": "string", "enum": ["streamable-http", "sse"] },
+            "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+            "protocol_version": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+            "stateless": { "type": "boolean" }
+          }
+        },
+        "auth": {
+          "type": "object",
+          "required": ["type", "required"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "type": "string", "enum": ["none", "bearer"] },
+            "required": { "type": "boolean" },
+            "header": { "type": "string" },
+            "scheme": { "type": "string" },
+            "env_var": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+            "key_prefix": { "type": "string" },
+            "signup_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+            "notes": { "type": "string" }
+          },
+          "if": { "properties": { "type": { "const": "bearer" } } },
+          "then": { "required": ["header", "scheme", "env_var", "signup_url"] },
+          "else": { "properties": { "required": { "const": false } } }
+        },
+        "rate_limits": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "keyless": { "type": "string" },
+            "keyed": { "type": "string" }
+          }
+        },
+        "client_key": { "type": "string", "pattern": "^tuxxin-[a-z0-9]+(-[a-z0-9]+)*$" },
+        "config_path": { "type": "string", "pattern": "^servers/[a-z0-9-]+/mcp\\.json$" },
+        "docs_path": { "type": "string", "pattern": "^servers/[a-z0-9-]+/README\\.md$" },
+        "docs_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "server_card": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "tools": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "description", "access", "parameters", "required"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+              "description": { "type": "string", "minLength": 1 },
+              "access": { "type": "string", "enum": ["free", "key", "plus", "pro", "subscriber"] },
+              "parameters": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+              "required": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+            }
+          }
+        }
+      }
+    }
+  }
+}

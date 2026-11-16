@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "tuxxin-webfetch": {
+      "type": "http",
+      "url": "https://webfetch.io/mcp",
+      "headers": {
+        "Authorization": "Bearer ${WEBFETCH_API_KEY}"
+      }
+    }
+  }
+}

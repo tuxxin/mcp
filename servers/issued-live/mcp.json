@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "tuxxin-issued-live": {
+      "type": "http",
+      "url": "https://issued.live/mcp"
+    }
+  }
+}

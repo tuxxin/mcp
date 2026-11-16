@@ -1,0 +1,443 @@
+{
+  "$schema": "./schemas/manifest.schema.json",
+  "version": "1.0.0",
+  "updated_at": "2026-11-16",
+  "provider": {
+    "name": "Tuxxin LLC",
+    "url": "https://tuxxin.com",
+    "repository": "https://github.com/tuxxin/mcp"
+  },
+  "servers": [
+    {
+      "id": "issued-live",
+      "name": "issued.live",
+      "domain": "issued.live",
+      "description": "Certificate transparency and DNS: certificates issued for a domain, the addresses it has resolved to, reverse IP lookups and newly registered domains.",
+      "category": "certificate-transparency",
+      "status": "live",
+      "transport": {
+        "type": "streamable-http",
+        "url": "https://issued.live/mcp",
+        "protocol_version": "2025-06-18",
+        "stateless": true
+      },
+      "auth": {
+        "type": "bearer",
+        "required": false,
+        "header": "Authorization",
+        "scheme": "Bearer",
+        "env_var": "ISSUED_LIVE_API_KEY",
+        "signup_url": "https://issued.live/pricing",
+        "notes": "Three tools are free without a key. The other tools need a key on the plan they name; called without one they return a tool error that names the plan."
+      },
+      "rate_limits": {
+        "keyless": "1,000 requests per day per client IP, reset at 00:00 UTC",
+        "keyed": "Basic 60/min, Plus 300/min, Pro 1,200/min, no daily cap; advanced queries allow 1 request in flight on Plus and 2 on Pro"
+      },
+      "client_key": "tuxxin-issued-live",
+      "config_path": "servers/issued-live/mcp.json",
+      "docs_path": "servers/issued-live/README.md",
+      "docs_url": "https://issued.live/developers",
+      "tools": [
+        {
+          "name": "lookup_domain",
+          "description": "Certificate record and every address the domain apex has resolved to.",
+          "access": "free",
+          "parameters": [
+            "domain"
+          ],
+          "required": [
+            "domain"
+          ]
+        },
+        {
+          "name": "recent_certificates",
+          "description": "Certificates logged in the last 30 minutes, newest first.",
+          "access": "free",
+          "parameters": [
+            "limit"
+          ],
+          "required": []
+        },
+        {
+          "name": "corpus_stats",
+          "description": "Corpus size, freshness, DNS coverage, CT log health and top issuers.",
+          "access": "free",
+          "parameters": [],
+          "required": []
+        },
+        {
+          "name": "domain_detail",
+          "description": "Full record for one domain: registration timing, addresses with network data, and certificates with SANs.",
+          "access": "plus",
+          "parameters": [
+            "domain"
+          ],
+          "required": [
+            "domain"
+          ]
+        },
+        {
+          "name": "domains_on_ip",
+          "description": "Hostnames observed resolving to one IP address.",
+          "access": "plus",
+          "parameters": [
+            "after",
+            "first_seen_from",
+            "first_seen_to",
+            "ip",
+            "limit"
+          ],
+          "required": [
+            "ip"
+          ]
+        },
+        {
+          "name": "domains_in_range",
+          "description": "Hostnames observed on any address in a CIDR range of up to 256 addresses.",
+          "access": "plus",
+          "parameters": [
+            "after",
+            "cidr",
+            "first_seen_from",
+            "first_seen_to",
+            "limit"
+          ],
+          "required": [
+            "cidr"
+          ]
+        },
+        {
+          "name": "get_certificate",
+          "description": "One certificate by cert_id or SHA-256, with its full SAN list.",
+          "access": "plus",
+          "parameters": [
+            "id"
+          ],
+          "required": [
+            "id"
+          ]
+        },
+        {
+          "name": "certificates_by_key",
+          "description": "Certificates issued for one public key (SPKI SHA-256), first seen in the last 32 hours.",
+          "access": "plus",
+          "parameters": [
+            "spki_sha256"
+          ],
+          "required": [
+            "spki_sha256"
+          ]
+        },
+        {
+          "name": "domain_timeline",
+          "description": "Dated sequence of zone, certificate and DNS observations for one domain.",
+          "access": "plus",
+          "parameters": [
+            "domain"
+          ],
+          "required": [
+            "domain"
+          ]
+        },
+        {
+          "name": "new_domains",
+          "description": "Newly registered domains from ICANN zone files, cursor-paged oldest first.",
+          "access": "pro",
+          "parameters": [
+            "after",
+            "certified",
+            "limit",
+            "max_hours_to_cert",
+            "since",
+            "tld",
+            "until"
+          ],
+          "required": []
+        },
+        {
+          "name": "search_domains",
+          "description": "Registrable domains matching a name pattern, optionally by nameserver.",
+          "access": "pro",
+          "parameters": [
+            "after",
+            "limit",
+            "name",
+            "ns"
+          ],
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "name": "lookup_domains",
+          "description": "Up to 500 domains in one call.",
+          "access": "pro",
+          "parameters": [
+            "domains",
+            "include"
+          ],
+          "required": [
+            "domains"
+          ]
+        },
+        {
+          "name": "provisioning",
+          "description": "Domains whose registration, first certificate and first DNS answer fall inside a short window.",
+          "access": "pro",
+          "parameters": [
+            "after",
+            "cert_to_dns_max",
+            "include_cert_before_zone",
+            "limit",
+            "max_hours_to_cert",
+            "ns",
+            "since",
+            "tld",
+            "until"
+          ],
+          "required": []
+        },
+        {
+          "name": "certificates_on_ip",
+          "description": "Certificates for the hostnames observed on one IP address, in issuance order.",
+          "access": "pro",
+          "parameters": [
+            "after",
+            "from",
+            "ip",
+            "issuer",
+            "limit",
+            "order",
+            "to",
+            "wildcard"
+          ],
+          "required": [
+            "ip"
+          ]
+        },
+        {
+          "name": "list_dataset_files",
+          "description": "Bulk dataset files the subscription can download today.",
+          "access": "subscriber",
+          "parameters": [],
+          "required": []
+        }
+      ]
+    },
+    {
+      "id": "curlhub",
+      "name": "curlhub.sh",
+      "domain": "curlhub.sh",
+      "description": "Converts a structured HTTP request into a curl command with verified escaping, as a shell string and an argv array.",
+      "category": "developer-tools",
+      "status": "live",
+      "transport": {
+        "type": "streamable-http",
+        "url": "https://curlhub.sh/mcp",
+        "protocol_version": "2025-06-18",
+        "stateless": true
+      },
+      "auth": {
+        "type": "none",
+        "required": false
+      },
+      "rate_limits": {
+        "keyless": "60 requests per minute per client IP, shared with the curlhub.sh transform tools"
+      },
+      "client_key": "tuxxin-curlhub",
+      "config_path": "servers/curlhub/mcp.json",
+      "docs_path": "servers/curlhub/README.md",
+      "docs_url": "https://curlhub.sh/llms.txt",
+      "tools": [
+        {
+          "name": "validate_and_format_curl",
+          "description": "Build a curl command from method, URL, headers and body; rejects non-http(s) schemes and control characters.",
+          "access": "free",
+          "parameters": [
+            "data",
+            "headers",
+            "method",
+            "url"
+          ],
+          "required": [
+            "url"
+          ]
+        }
+      ],
+      "server_card": "https://curlhub.sh/.well-known/mcp/server-card.json"
+    },
+    {
+      "id": "webshot",
+      "name": "webshot.site",
+      "domain": "webshot.site",
+      "description": "Renders a screenshot or PDF of a public URL in an isolated headless Chrome sandbox and returns a link to the file.",
+      "category": "screenshots",
+      "status": "live",
+      "transport": {
+        "type": "streamable-http",
+        "url": "https://webshot.site/mcp",
+        "protocol_version": "2025-06-18",
+        "stateless": true
+      },
+      "auth": {
+        "type": "bearer",
+        "required": false,
+        "header": "Authorization",
+        "scheme": "Bearer",
+        "env_var": "WEBSHOT_API_KEY",
+        "key_prefix": "wsk_",
+        "signup_url": "https://webshot.site/pricing",
+        "notes": "Keyless calls use the free credit bucket. A paid key bills the key's plan. An invalid key returns 401."
+      },
+      "rate_limits": {
+        "keyless": "5 credits per 15 minutes per client IP; a viewport capture costs 1 credit, full_page costs 2",
+        "keyed": "Set by the key's plan (Starter, Pro, Business)"
+      },
+      "client_key": "tuxxin-webshot",
+      "config_path": "servers/webshot/mcp.json",
+      "docs_path": "servers/webshot/README.md",
+      "docs_url": "https://webshot.site/llms.txt",
+      "tools": [
+        {
+          "name": "capture_sandbox_webshot",
+          "description": "Screenshot or PDF of a public URL at desktop, tablet or mobile size; private and metadata addresses are refused.",
+          "access": "free",
+          "parameters": [
+            "format",
+            "full_page",
+            "url",
+            "viewport"
+          ],
+          "required": [
+            "url"
+          ]
+        }
+      ],
+      "server_card": "https://webshot.site/.well-known/mcp/server-card.json"
+    },
+    {
+      "id": "webfetch",
+      "name": "webfetch.io",
+      "domain": "webfetch.io",
+      "description": "Fetches web pages as markdown, text or HTML, extracts structured JSON with CSS or XPath selectors, and runs Google, Bing, Yahoo and Brave searches.",
+      "category": "web-scraping",
+      "status": "live",
+      "transport": {
+        "type": "streamable-http",
+        "url": "https://webfetch.io/mcp",
+        "protocol_version": "2025-06-18",
+        "stateless": true
+      },
+      "auth": {
+        "type": "bearer",
+        "required": true,
+        "header": "Authorization",
+        "scheme": "Bearer",
+        "env_var": "WEBFETCH_API_KEY",
+        "key_prefix": "wfk_",
+        "signup_url": "https://webfetch.io/signup",
+        "notes": "Every call needs a key. A free account starts with 1,000 credits and gets 250 more on the 1st of each month."
+      },
+      "rate_limits": {
+        "keyed": "Credit-metered: 1 credit per plain fetch, 5 with JavaScript rendering, 10 per search page (15 with light_request false). Concurrency is 5 on Free and 25 to 400 on paid plans. A failed call costs nothing."
+      },
+      "client_key": "tuxxin-webfetch",
+      "config_path": "servers/webfetch/mcp.json",
+      "docs_path": "servers/webfetch/README.md",
+      "docs_url": "https://webfetch.io/llms.txt",
+      "tools": [
+        {
+          "name": "fetch_page",
+          "description": "Fetch a URL as markdown, text or HTML; 5 credits rendered, 1 credit with render_js false.",
+          "access": "key",
+          "parameters": [
+            "render_js",
+            "return_format",
+            "url"
+          ],
+          "required": [
+            "url"
+          ]
+        },
+        {
+          "name": "extract_data",
+          "description": "Fetch a URL and return JSON built from CSS or XPath selector rules.",
+          "access": "key",
+          "parameters": [
+            "extract_rules",
+            "render_js",
+            "url"
+          ],
+          "required": [
+            "url",
+            "extract_rules"
+          ]
+        },
+        {
+          "name": "search_web",
+          "description": "One page of search results as JSON from Google, Bing, Yahoo or Brave; needs search access enabled on the key.",
+          "access": "key",
+          "parameters": [
+            "country_code",
+            "engine",
+            "light_request",
+            "page",
+            "query",
+            "search_type"
+          ],
+          "required": [
+            "query"
+          ]
+        }
+      ],
+      "server_card": "https://webfetch.io/.well-known/mcp/server-card.json"
+    },
+    {
+      "id": "worldip",
+      "name": "WorldIP.io",
+      "domain": "worldip.io",
+      "description": "IP intelligence for IPv4 and IPv6 addresses: owner, ASN, geolocation, CIDR, reverse and forward-confirmed DNS, and a daily count of hosted domains.",
+      "category": "ip-intelligence",
+      "status": "live",
+      "transport": {
+        "type": "streamable-http",
+        "url": "https://worldip.io/mcp",
+        "protocol_version": "2025-06-18",
+        "stateless": true
+      },
+      "auth": {
+        "type": "none",
+        "required": false
+      },
+      "rate_limits": {
+        "keyless": "1,000 requests per day and 60 per minute per client IP"
+      },
+      "client_key": "tuxxin-worldip",
+      "config_path": "servers/worldip/mcp.json",
+      "docs_path": "servers/worldip/README.md",
+      "docs_url": "https://worldip.io/llms.txt",
+      "tools": [
+        {
+          "name": "lookup_ip",
+          "description": "Profile of a public IPv4 or IPv6 address: owner, ASN, location, CIDR, PTR and forward-confirmed DNS.",
+          "access": "free",
+          "parameters": [
+            "ip"
+          ],
+          "required": [
+            "ip"
+          ]
+        },
+        {
+          "name": "whats_my_ip",
+          "description": "The caller's own public IP address and its profile.",
+          "access": "free",
+          "parameters": [],
+          "required": []
+        }
+      ],
+      "server_card": "https://worldip.io/.well-known/mcp/server-card.json"
+    }
+  ]
+}

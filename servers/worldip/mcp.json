@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "tuxxin-worldip": {
+      "type": "http",
+      "url": "https://worldip.io/mcp"
+    }
+  }
+}

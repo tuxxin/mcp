@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "tuxxin-curlhub": {
+      "type": "http",
+      "url": "https://curlhub.sh/mcp"
+    }
+  }
+}

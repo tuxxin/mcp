@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "tuxxin-issued-live": {
+      "type": "http",
+      "url": "https://issued.live/mcp"
+    },
+    "tuxxin-curlhub": {
+      "type": "http",
+      "url": "https://curlhub.sh/mcp"
+    },
+    "tuxxin-webshot": {
+      "type": "http",
+      "url": "https://webshot.site/mcp"
+    },
+    "tuxxin-webfetch": {
+      "type": "http",
+      "url": "https://webfetch.io/mcp",
+      "headers": {
+        "Authorization": "Bearer ${WEBFETCH_API_KEY}"
+      }
+    },
+    "tuxxin-worldip": {
+      "type": "http",
+      "url": "https://worldip.io/mcp"
+    }
+  }
+}
